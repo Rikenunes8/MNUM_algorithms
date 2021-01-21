@@ -1,32 +1,23 @@
 import math
 
-# Quadratura
+# Functions
 
 def f1(x):
     return math.sin(x)
 
-
-def trapeze(f, a, b, n):
-    h = abs(b-a)/n
-    return h/2*(f(a)+f(b)+2*sum([f(a+i*h) for i in range(1, n)]))
-
-
-print(trapeze(f1, 0, math.pi, 8))
-
-
-def simpson(f, a, b, n):
-    h = (b-a)/n/2
-    return h/3*(f(a)+f(b)+4*sum([f(a+i*h) for i in range(1, 2*n, 2)]) + 2*sum([f(a+i*h) for i in range(2, 2*n-1, 2)]))
-
-
-# print(simpson(f1, 0, math.pi, 8))
-
-
-# Cubatura
-
 def f2(x, y):
     return x**2-2*y**2+x*y**3
 
+
+# Algorithms
+
+def trapezium(f, a, b, h):
+    n = round((b-a)/h)
+    return h/2*(f(a)+f(b)+2*sum(f(a+h*i) for i in range(1, n)))
+
+def simpson(f, a, b, h):
+    n = round((b-a)/(2*h))
+    return h/3*(f(a)+f(b)+4*sum(f(a+h*i) for i in range(1, 2*n, 2))+2*sum(f(a+h*i) for i in range(2, 2*n-1, 2)))
 
 def cub_trapeze(f, a, b, A, B):
     hx = (b-a)/2
@@ -42,10 +33,15 @@ def cub_simpson(f, a, b, A, B):
     E0 = f(a, A) + f(b, B) + f(a, B) + f(b, A)
     E1 = f(a+hx, A) + f(a+hx, B) + f(a, A+hy) + f(b, A+hy)
     E2 = f(a+hx, A+hy)
-
     return hx*hy/9*(E0+4*E1+16*E2)
 
 
-# print(cub_trapeze(f2, 0, 2, -1, 1))
-# print(cub_simpson(f2, 0, 2, -1, 1))
+
+# Run
+
+print(trapezium(f1, 0, math.pi, math.pi/8))
+print(simpson(f1, 0, math.pi, math.pi/8))
+
+print(cub_trapeze(f2, 0, 2, -1, 1))
+print(cub_simpson(f2, 0, 2, -1, 1))
 
