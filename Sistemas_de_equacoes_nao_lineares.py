@@ -1,7 +1,6 @@
 import math
-import sympy as sy
 
-######## Metodo de Newton ########
+# Functions
 
 def f1(x, y):
     return 2*x**2-x*y-5*x+1
@@ -22,24 +21,52 @@ def df2dy(x, y):
     return -2*y
 
 
-def newton(x0, y0, e):
-    jacob = df1dx(x0, y0)*df2dy(x0, y0) - df2dx(x0, y0)*df1dy(x0, y0)
-    i = 0
-    erro1 = e+1
-    erro2 = e+1
-    while erro1 > e or erro2 > e:
-        print(x0, y0, f1(x0, y0), f2(x0, y0), df1dx(x0, y0), df1dy(x0, y0), df2dx(x0, y0), df2dy(x0, y0), '\n')
-        xn = x0 - (f1(x0, y0)*df2dy(x0, y0)-f2(x0, y0)*df1dy(x0, y0))/jacob
-        yn = y0 - (f2(x0, y0)*df1dx(x0, y0)-f1(x0, y0)*df2dx(x0, y0))/jacob
-        erro1 = abs(xn-x0)
-        erro2 = abs(yn-y0)
-        x0, y0 = xn, yn
-        i += 1
-    print("Iteration:", i)
-    return (xn, yn)
+def h1(x, y):
+    return math.sqrt((y*x+5*x-1)/2)
+    
+def h2(x, y):
+    return math.sqrt(x+3*math.log(x))
 
 
-######## Picardo-Peano ########
+# Algorithms
+
+def sis_newton(f1, f2, df1dx, df1dy, df2dx, df2dy, x, y, e):
+    erro_x = e+1
+    erro_y = e+1
+    while erro_x > e or erro_y > e:
+        detJacob = df1dx(x,y)*df2dy(x,y)-df1dy(x,y)*df2dx(x,y)
+        xn = x - (f1(x,y)*df2dy(x,y)-f2(x,y)*df1dy(x,y))/detJacob
+        yn = y - (f2(x,y)*df1dx(x,y)-f1(x,y)*df2dx(x,y))/detJacob
+        erro_x = abs(xn-x)
+        erro_y = abs(yn-y)
+        x = xn
+        y = yn
+    return xn, yn
+
+
+def sis_picardo_peano(g1, g2, x, y, e):
+    erro_x = e+1
+    erro_y = e+1
+    while erro_x > e or erro_y > e:
+        xn = g1(x, y)
+        yn = g2(x, y)
+        erro_x = abs(xn-x)
+        erro_y = abs(yn-y)
+        x = xn
+        y = yn
+    return xn, yn
+
+
+# Run
+
+print(sis_newton(f1, f2, df1dx, df1dy, df2dx, df2dy, 4, 4, 0.0001))
+print(sis_picardo_peano(h1, h2, 4, 4, 0.0001))
+
+
+
+
+######## Other method for Picardo-Peano ########
+import sympy as sy
 
 X, Y = sy.symbols('X, Y')
 
@@ -77,6 +104,3 @@ def picardo_peano(x0, y0, e):
     print("Iteration:", i)
     return (xn, yn)
 
-
-print(newton(4, 4, 0.00001))
-print(picardo_peano(4, 4, 0.00001))
