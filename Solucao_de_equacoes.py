@@ -68,6 +68,7 @@ def picardo_peano(g, dg, x0, e):
         x0 = xn
     return xn
 
+# Run
 
 print(bissection(f1, -2, -1, 0.001))
 print(false_position(f1, -2, -1, 0.001))
